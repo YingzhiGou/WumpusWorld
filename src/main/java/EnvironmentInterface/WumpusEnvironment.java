@@ -85,7 +85,11 @@ public class WumpusEnvironment extends EIDefaultImpl {
 		}
 
 	}
-
+//	public WumpusEnvironment() {
+//		super();
+//		this.world.setInterface(this);
+//		this.world.setUp(true);
+//	}
 	/**
 	 * Main method to start Wumpus environment stand alone.
 	 * 
@@ -234,6 +238,11 @@ public class WumpusEnvironment extends EIDefaultImpl {
 		// Clean up.
 		System.out.println("Handing wumpus world to garbage collector");
 		world = null;
+	}
+
+	@Override
+	public String requiredVersion() {
+		return "0.4";
 	}
 
 	@Override
@@ -411,6 +420,7 @@ public class WumpusEnvironment extends EIDefaultImpl {
 				throw new ActException(ActException.FAILURE, "unknown action: "
 						+ action);
 			}
+
 		} catch (NoEnvironmentException e) {
 			throw new ActException(ActException.FAILURE,
 					"Environment is not available");

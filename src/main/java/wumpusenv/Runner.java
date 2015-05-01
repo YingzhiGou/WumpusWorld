@@ -11,6 +11,7 @@ import java.awt.Label;
 import java.awt.MediaTracker;
 import java.awt.Panel;
 import java.awt.Point;
+import java.util.Random;
 
 import eis.iilang.EnvironmentState;
 
@@ -63,6 +64,9 @@ public class Runner extends Panel implements Listener {
 	private WumpusAgent agent;
 	// MASTER CLOCK
 	private int time = 0;
+
+	Random wumpusSimpleBrain = new Random(); // used to decide how wumpus's going to move in the grid
+	int wumpusLastMove = 0;
 
 	/**
 	 * Records running or paused state. In paused state no actions can be done,
@@ -209,6 +213,31 @@ public class Runner extends Panel implements Listener {
 
 		actionLabel.setText("Action: " + pAction);
 		scoreLabel.setText("Score: " + game.getScore());
+
+		// modified by Yingzhi
+		if(realModel.wumpusIsAlive()) {
+			// now is the wumpus's move
+			// wumpus moves 1 time when every 5 moves the agent makes
+			if(time - wumpusLastMove > 4) {
+				System.out.print("[WUMPUS] IT IS TIME TO MOVE!!! ROARRRRRRR");
+				Point wumpus = realModel.getWumpusLocation();
+				int diff = (wumpusSimpleBrain.nextBoolean() ? 1 : -1); // decide the direction
+				if (wumpusSimpleBrain.nextBoolean()) {
+					//move along x
+					wumpus.x += diff;
+				} else {
+					// move along y
+					wumpus.y += diff;
+				}
+				// check if the move is valid
+				if (!realModel.contains(wumpus, realModel.WALL) && !realModel.contains(wumpus, realModel.PIT) && !realModel.contains(wumpus, realModel.GOLD)) {
+					realModel.removeSmell();
+					realModel.setWumpusLocation(wumpus);
+					realModel.addSmell();
+					wumpusLastMove=time;
+				}
+			}
+		}
 
 		// Check whether game has finished, and, if so, show corresponding end
 		// view

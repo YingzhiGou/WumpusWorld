@@ -157,37 +157,7 @@ public class TheGame {
 		if (pWorld.agentKilled()) {
 			score = score-1000; // just died...
 		}
-		// move the wumpus
-		wumpusMove(pWorld);
-
 	    calcPercepts(pWorld);
-	}
-
-	/**
-	 * by Yingzhi
-	 * added this function to move the wumpus
-	 * @param pWorld
-	 */
-	Random rand = new Random();
-	int wumpusMoveTime = Calendar.getInstance().get(Calendar.SECOND);
-	private void wumpusMove(WorldModel pWorld) {
-		Point wumpus = pWorld.getWumpusLocation();
-		int currentTime = Calendar.getInstance().get(Calendar.SECOND);
-
-		if(wumpusMoveTime - currentTime > 5) { // move every 5 seconds
-			int move = (rand.nextBoolean() ? 1 : -1);
-			if (rand.nextBoolean()) {
-				wumpus.x += move;
-			} else {
-				wumpus.y += move;
-			}
-			// check if the move is valid
-			if(pWorld.contains(wumpus, pWorld.GOLD) && pWorld.contains(wumpus, pWorld.PIT) && pWorld.contains(wumpus, WorldModel.WALL)) { // not on gold, pit and wall
-				pWorld.setWumpusLocation(wumpus);
-				wumpusMoveTime = currentTime;
-				//success move
-			}
-		}
 	}
 
 	/** 
