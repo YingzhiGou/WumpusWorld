@@ -1,7 +1,6 @@
 package wumpusenv;
 
 import java.awt.Point;
-import java.util.Calendar;
 import java.util.Random;
 
 /**
@@ -29,6 +28,11 @@ public class TheGame {
 	public static final int SCREAM = 4;
 	public static final int GLITTER = 5;
 	public static final int NONE = 6;
+
+    // Wumpus CLOCK
+    int time = 0;
+    Random wumpusSimpleBrain = new Random(); // used to decide how wumpus's going to move in the grid
+    int wumpusLastMove = 0;
 	
 	/**
 	 * Percept after the last action has been performed.
@@ -157,6 +161,32 @@ public class TheGame {
 		if (pWorld.agentKilled()) {
 			score = score-1000; // just died...
 		}
+        time++;
+		// modified by Yingzhi
+		if(pWorld.wumpusIsAlive()) {
+			// now is the wumpus's move
+			// wumpus moves 1 time when every 5 moves the agent makes
+			if(time - wumpusLastMove > 4) {
+				System.out.print("[WUMPUS] IT IS TIME TO MOVE!!! ROARRRRRRR");
+				Point wumpus = pWorld.getWumpusLocation();
+				int diff = (wumpusSimpleBrain.nextBoolean() ? 1 : -1); // decide the direction
+				if (wumpusSimpleBrain.nextBoolean()) {
+					//move along x
+					wumpus.x += diff;
+				} else {
+					// move along y
+					wumpus.y += diff;
+				}
+				// check if the move is valid
+				if (!pWorld.contains(wumpus, pWorld.WALL) && !pWorld.contains(wumpus, pWorld.PIT) && !pWorld.contains(wumpus, pWorld.GOLD)) {
+                    pWorld.removeSmell();
+                    pWorld.setWumpusLocation(wumpus);
+                    pWorld.addSmell();
+					wumpusLastMove=time;
+				}
+			}
+		}
+
 	    calcPercepts(pWorld);
 	}
 
