@@ -138,6 +138,8 @@ public class TheGame {
 	            pWorld.setAgentHasArrow(false);
 	            if (wumpusHit) {
 	                pWorld.setWumpusIsAlive(false);
+					//Yingzhi remove smell
+					pWorld.removeSmell();
 	                fPercept.setScream(true);
 	            }
 	        }
